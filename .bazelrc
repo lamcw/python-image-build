@@ -1,0 +1,2 @@
+# Disable rules_docker transition on M1 macos
+build --@io_bazel_rules_docker//transitions:enable=false

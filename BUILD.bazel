@@ -1,0 +1,38 @@
+load("@io_bazel_rules_docker//python3:image.bzl", "py3_image")
+load("@io_bazel_rules_docker//python:image.bzl", "py_layer")
+
+DEPS = [
+    "@pypi_torch//:pkg",
+    "@pypi_scipy//:pkg",
+]
+
+py_layer(
+    name = "external_torch",
+    deps = DEPS,
+    filter = "@pypi_torch"
+)
+
+py_layer(
+    name = "external_deps",
+    deps = DEPS,
+    filter = "@",
+)
+
+py3_image(
+    name = "py_image",
+    srcs = glob(["src/*.py"]),
+    layers = [":external_torch", ":external_deps"],
+    deps = DEPS,
+    main = "src/main.py",
+)
+
+# load("@rules_python//python:defs.bzl", "py_binary")
+#
+# py_binary(
+#     name = "main",
+#     srcs = glob(["src/*.py"]),
+#     deps = [
+#         "@pypi_torch//:pkg",
+#         "@pypi_scipy//:pkg",
+#     ],
+# )
